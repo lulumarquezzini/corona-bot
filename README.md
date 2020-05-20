@@ -11,14 +11,14 @@ Comando !casos:
 
 <div align="center">
   <br>
-    <img src="screenshot1.png" alt="Screenshot1" width="80%">
+    <img src="screenshot1.png" alt="Screenshot1" width="50%">
   <br>
 </div>
 
 Comando !casos {país}
 <div align="center">
   <br>
-    <img src="screenshot2.png" alt="Screenshot2" width="80%">
+    <img src="screenshot2.png" alt="Screenshot2" width="50%">
   <br>
 </div>
 
