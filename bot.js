@@ -12,6 +12,43 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if(command === '!estados'){
+        const url = 'https://covid19-brazil-api.now.sh/api/report/v1';
+        const getData = async url => {
+            try {
+            const response = await fetch(url);
+            let json = await response.json();
+            let casos = json.data;
+            casos.sort(function(a, b){
+                return b.cases - a.cases;
+            });
+            var exampleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('Ranking por estados do brasil :biohazard:')
+            //.setURL('https://discord.js.org/')
+            //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+            .setDescription('8 estados mais afligidos pelo coroninha')
+            //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+            //.setImage('https://i.imgur.com/wSTFkRM.png')
+            .setTimestamp()
+            .setFooter('Em progresso by Kiyomin')
+            for(var i in casos){
+                if( i == 8){
+                    break;
+                }
+                exampleEmbed.addFields(
+                    { name: 'Estado :flag_br:', value: casos[i].uf, inline: true },
+                    { name: 'Casos :fire:', value: casos[i].cases, inline: true },
+                    { name: 'Óbitos :skull_crossbones:', value: casos[i].deaths, inline: true },
+                )
+            }
+            msg.channel.send(exampleEmbed);
+            } catch (error) {
+            console.log(error);
+            }
+        };
+        getData(url);
+    }
     if(command === '!kokoron'){
         async function fetchJSON(url) {
             const response = await fetch(url);
