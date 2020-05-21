@@ -49,12 +49,12 @@ client.on('message', msg => {
                     .setTimestamp()
                     .setFooter('Em progresso by Kiyomin')
                     exampleEmbed.addFields(
-                        { name: 'Title', value: Kokoron.name, inline: true },
-                        { name: 'Japanese title', value: Kokoron.japanese_name, inline: true },
+                        { name: 'Title', value: Kokoron.name === null ? '-' : Kokoron.name, inline: true },
+                        { name: 'Japanese title', value: Kokoron.japanese_name === null ? '-' : Kokoron.japanese_name, inline: true },
                         { name: 'Rarity', value: ':star:'.repeat(Kokoron.i_rarity), inline: true },
                         { name: 'Attribute', value: Kokoron.i_attribute , inline: true },
-                        { name: 'Skill', value: Kokoron.skill_name, inline: true},
-                        { name: 'Japanese skill', value: Kokoron.japanese_skill_name, inline: true}
+                        { name: 'Skill', value: Kokoron.skill_name === null ? '-' : Kokoron.skill_name, inline: true},
+                        { name: 'Japanese skill', value: Kokoron.japanese_skill_name === null ? '-' : Kokoron.japanese_skill_name, inline: true}
                     )
                     msg.channel.send(exampleEmbed);
                     
