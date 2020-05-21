@@ -12,6 +12,60 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if(command === '!kokoron'){
+        async function fetchJSON(url) {
+            const response = await fetch(url);
+            let json = await response.json();
+            return json.results;
+        }
+        const url = 'http://bandori.party/api/cards';
+        const getData = async url => {
+            try {
+                const response = await fetch(url);
+                let json = await response.json();
+                let urls = [];
+                const totpage = Math.ceil(json.count/10);
+                for(let page = 1; page <= totpage; page++){
+                    urls.push(url + "/?page=" + page);
+                }
+                let promises = urls.map(url => fetchJSON(url));
+                Promise.all(promises).then(responses => {
+                    let kokorons = [];
+                    responses.map(response => {
+                        response.map(res => {
+                            if(res.member == 16){
+                                kokorons.push(res);
+                            }
+                        })
+                    })
+                    const Kokoron = kokorons[Math.floor(Math.random() * kokorons.length)];
+                    var exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('#FFEE22')
+                    //.setURL('https://discord.js.org/')
+                    //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                    //.setDescription(Kokoron.name)
+                    //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                    .setImage(Kokoron.i_rarity > 2 ? Kokoron.art_trained : Kokoron.art)
+                    .setTimestamp()
+                    .setFooter('Em progresso by Kiyomin')
+                    exampleEmbed.addFields(
+                        { name: 'Title', value: Kokoron.name, inline: true },
+                        { name: 'Japanese title', value: Kokoron.japanese_name, inline: true },
+                        { name: 'Rarity', value: ':star:'.repeat(Kokoron.i_rarity), inline: true },
+                        { name: 'Attribute', value: Kokoron.i_attribute , inline: true },
+                        { name: 'Skill', value: Kokoron.skill_name, inline: true},
+                        { name: 'Japanese skill', value: Kokoron.japanese_skill_name, inline: true}
+                    )
+                    msg.channel.send(exampleEmbed);
+                    
+                })
+
+            } catch (error) {
+            console.log(error);
+            }
+        };
+        getData(url);
+    }
     if(command === '!hug'){
         var exampleEmbed = new Discord.MessageEmbed()
         .setColor('#0099ff')
