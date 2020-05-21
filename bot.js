@@ -15,7 +15,7 @@ client.on('message', msg => {
     if(command === '!hug'){
         var exampleEmbed = new Discord.MessageEmbed()
         .setColor('#0099ff')
-        .setTitle('Abraços estão proibidos, ' + msg.author.username)
+        .setTitle('Abraços estão proibidos, ' + msg.author.username + "!")
         .setImage('https://i.imgur.com/X84T2Ot.gif')
         .setTimestamp()
         .setFooter('Em progresso by Kiyomin')
