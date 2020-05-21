@@ -37,7 +37,7 @@ client.on('message', msg => {
                     break;
                 }
                 exampleEmbed.addFields(
-                    { name: 'Estado :flag_br:', value: casos[i].uf, inline: true },
+                    { name: 'Estado :flag_br:', value: casos[i].state, inline: true },
                     { name: 'Casos :fire:', value: casos[i].cases, inline: true },
                     { name: 'Óbitos :skull_crossbones:', value: casos[i].deaths, inline: true },
                 )
