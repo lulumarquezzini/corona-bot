@@ -12,6 +12,16 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if(command === '!hug'){
+        var exampleEmbed = new Discord.MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('Abraços estão proibidos, se cuide!')
+        .setImage('https://i.imgur.com/X84T2Ot.gif')
+        .setTimestamp()
+        .setFooter('Em progresso by Kiyomin')
+
+        msg.channel.send(exampleEmbed);
+    }
     if(command === '!cloroquina'){
         msg.channel.send('Cloroquina, Cloroquina' +
         '\n Cloroquina lá no S.U.S' +
