@@ -18,6 +18,72 @@ client.on('message', msg => {
         '\n Eu sei que tu me curas' +
         '\n Em nome de Jesus.... :musical_note:');
     }
+    if(command === '!obitos'){
+        const url = 'https://covid19-brazil-api.now.sh/api/report/v1/countries';
+        const getData = async url => {
+            try {
+            const response = await fetch(url);
+            let json = await response.json();
+            let casos = json.data;
+            casos.sort(function(a, b){
+                return b.deaths - a.deaths;
+            });
+            var exampleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('Ranking de mortes mundial :biohazard:')
+            //.setURL('https://discord.js.org/')
+            //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+            .setDescription('8 países que mais mortes tiveram por corona!')
+            //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+            //.setImage('https://i.imgur.com/wSTFkRM.png')
+            .setTimestamp()
+            .setFooter('Em progresso by Kiyomin')
+            for(var i in casos){
+                if( i == 8){
+                    break;
+                }
+                let flag;
+                switch (casos[i].country) {
+                    case 'US':
+                    flag = ':flag_us:'
+                    break;
+                    case 'Russia':
+                        flag = ':flag_ru:'
+                        break;
+                    case 'Brazil':
+                        flag = ':flag_br:'
+                        break;
+                    case 'United Kingdom':
+                        flag = ':flag_gb:'
+                        break;
+                    case 'Spain':
+                        flag = ':flag_es:'
+                        break;
+                    case 'Italy':
+                        flag = ':flag_it:'
+                        break;
+                    case 'France':
+                        flag = ':flag_fr:'
+                        break;
+                    case 'Germany':
+                        flag = ':flag_de:'
+                        break;
+                    default:
+                    flag = ':map:'
+                }
+                exampleEmbed.addFields(
+                    { name: 'País', value: casos[i].country + " " + flag, inline: true },
+                    { name: 'Óbitos :skull_crossbones:', value: casos[i].deaths, inline: true },
+                    { name: 'Casos :fire:', value: casos[i].confirmed, inline: true },
+                )
+            }
+            msg.channel.send(exampleEmbed);
+            } catch (error) {
+            console.log(error);
+            }
+        };
+        getData(url);
+    }
     if (command === '!casos') {
         if(args.length > 0){
             const url = 'https://covid19-brazil-api.now.sh/api/report/v1/' + args[0];
