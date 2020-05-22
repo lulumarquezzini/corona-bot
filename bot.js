@@ -154,7 +154,8 @@ client.on('message', msg => {
             { name:  '!hug', value: 'Tente abraçar alguém e veja o resultado!'},
             { name: '!kokoron', value: 'Afinal, quem não precisa de Kokorons nesses tempos difíceis? (Ou em qualquer tempo) :sunny:'},
             { name: '!cloroquina', value: 'Você é um robô do Bolsonaro :robot:'},
-            { name: '!diarios (-o)', value: 'Mostra os países que estão liderando nos casos do dia, com -o, mostra a liderança nos óbitos'}
+            { name: '!diarios (-o)', value: 'Mostra os países que estão liderando nos casos do dia, com -o, mostra a liderança nos óbitos'},
+            { name: '!continentes :continent', value: 'Mostra todos os continentes, se nenhum for especificado. Do contrário, detalha a situação de apenas um.'}
         )
         msg.channel.send(exampleEmbed);        
     }
