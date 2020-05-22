@@ -181,7 +181,7 @@ client.on('message', msg => {
                     //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
                     //.setDescription(Kokoron.name)
                     //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
-                    .setImage(Kokoron.i_rarity > 2 ? Kokoron.art_trained : Kokoron.art)
+                    .setImage(Kokoron.i_rarity > 2 ? Kokoron.art_trained : 'https://i.bandori.party/u/c/art/' + encodeURIComponent(Kokoron.art.replace('https://i.bandori.party/u/c/art/', '')) )
                     .setTimestamp()
                     .setFooter('Em progresso by Kiyomin')
                     exampleEmbed.addFields(
