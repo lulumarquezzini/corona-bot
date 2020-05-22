@@ -300,7 +300,7 @@ client.on('message', msg => {
                     const response = await fetch(url);
                     let json = await response.json();
                     if (json.message){
-                        throw "País não encontrado, bobão!"
+                        throw "País não encontrado ou não tem casos, bobão!"
                     }
                     var exampleEmbed = new Discord.MessageEmbed()
                     .setColor('#0099ff')
