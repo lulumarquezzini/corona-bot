@@ -13,6 +13,89 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if( command === '!continentes'){
+        if(args.length > 0){
+            const query = args[1] ? args[0] + " " + args[1] : args[0];
+            const url = 'https://disease.sh/v2/continents/' + query;
+            const getData = async url => {
+                try {
+                    const response = await fetch(url);
+                    let json = await response.json();
+                    if (json.message){
+                        throw "Continente não encontrado ou não tem casos, bobão!"
+                    }
+                    var exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('Detalhes de um continente :biohazard:')
+                    //.setURL('https://discord.js.org/')
+                    //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                    .setDescription('Informações mais detalhadas sobre um único continente')
+                    //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                    //.setImage('https://i.imgur.com/wSTFkRM.png')
+                    .setTimestamp()
+                    .setFooter('Em progresso by Kiyomin')
+                    exampleEmbed.addFields(
+                        { name: 'Continente', value: json.continent, inline: true },
+                        { name: 'Casos :fire:', value: json.cases + " ( +" + json.todayCases + " )", inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json.deaths + " ( +" + json.todayDeaths + " )", inline: true },
+                        { name: 'Ativos :hospital: ', value: json.active , inline: true },
+                        { name: 'Estado crítico :crying_cat_face:', value: json.critical, inline: true},
+                        { name: 'Recuperados :penguin:', value: json.recovered, inline: true },
+                        { name: 'Casos por milhão', value: json.casesPerOneMillion, inline: true},
+                        { name: 'Mortes por milhão', value: json.deathsPerOneMillion, inline: true},
+                        { name: 'Testes :test_tube:', value: json.tests, inline: true}
+                    )
+                    msg.channel.send(exampleEmbed);
+                } catch (error) {
+                    var exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('Erro! :biohazard:')
+                    //.setURL('https://discord.js.org/')
+                    //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                    .setDescription(error + " :penguin:")
+                    //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                    //.setImage('https://i.imgur.com/wSTFkRM.png')
+                    .setTimestamp()
+                    .setFooter('Em progresso by Kiyomin')
+                    msg.channel.send(exampleEmbed);
+                }
+            };
+            getData(url);            
+        }
+        else {
+            const url = 'https://disease.sh/v2/continents?sort=cases';
+            const getData = async url => {
+                try {
+                const response = await fetch(url);
+                let json = await response.json();
+                var exampleEmbed = new Discord.MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle('Ranking de casos por continente :biohazard:')
+                //.setURL('https://discord.js.org/')
+                //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                .setDescription('Continentes com mais casos')
+                //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                //.setImage('https://i.imgur.com/wSTFkRM.png')
+                .setTimestamp()
+                .setFooter('Em progresso by Kiyomin')
+                for(var i in json){
+                    if( i == 5){
+                        break;
+                    }
+                    exampleEmbed.addFields(
+                        { name: 'Continente', value: json[i].continent, inline: true },
+                        { name: 'Casos :fire:', value: json[i].cases + ' ( +' + json[i].todayCases + ' )', inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json[i].deaths + ' ( +' + json[i].todayDeaths + ' )', inline: true },
+                    )
+                }
+                msg.channel.send(exampleEmbed);
+                } catch (error) {
+                console.log(error);
+                }
+            };
+            getData(url);
+        }       
+    }
     if( command === '!diarios') {
         const filtro = args[0] === '-o' ? 'todayDeaths' : 'todayCases';
         const url = 'https://disease.sh/v2/countries?sort=' + filtro;
