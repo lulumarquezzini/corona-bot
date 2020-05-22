@@ -340,7 +340,7 @@ client.on('message', msg => {
                         { name: 'Casos :fire:', value: json.cases + " ( +" + json.todayCases + " )", inline: true },
                         { name: 'Óbitos :skull_crossbones:', value: json.deaths + " ( +" + json.todayDeaths + " )", inline: true },
                         { name: 'Ativos :hospital: ', value: json.active , inline: true },
-                        { name: 'Estado crítico :crying_cat_face', value: json.critical, inline: true},
+                        { name: 'Estado crítico :crying_cat_face:', value: json.critical, inline: true},
                         { name: 'Recuperados :penguin:', value: json.recovered, inline: true },
                         { name: 'Casos por milhão', value: json.casesPerOneMillion, inline: true},
                         { name: 'Mortes por milhão', value: json.deathsPerOneMillion, inline: true},
