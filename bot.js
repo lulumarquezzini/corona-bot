@@ -45,41 +45,86 @@ client.on('message', msg => {
         getData(url);        
     }
     if(command === '!estados'){
-        const url = 'https://covid19-brazil-api.now.sh/api/report/v1';
-        const getData = async url => {
-            try {
-            const response = await fetch(url);
-            let json = await response.json();
-            let casos = json.data;
-            casos.sort(function(a, b){
-                return b.cases - a.cases;
-            });
-            var exampleEmbed = new Discord.MessageEmbed()
-            .setColor('#0099ff')
-            .setTitle('Ranking por estados do brasil :biohazard:')
-            //.setURL('https://discord.js.org/')
-            //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
-            .setDescription('8 estados mais afligidos pelo coroninha')
-            //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
-            //.setImage('https://i.imgur.com/wSTFkRM.png')
-            .setTimestamp()
-            .setFooter('Em progresso by Kiyomin')
-            for(var i in casos){
-                if( i == 8){
-                    break;
+        if(args.length > 0){
+            const url = 'https://api.coronavairus.com.br/state/last/' + args[0];
+            const getData = async url => {
+                try {
+                    const response = await fetch(url);
+                    let json = await response.json();
+                    let casos = json.latest;
+                    if (Object.keys(json).length === 0){
+                        throw "Estado não encontrado, bobão!"
+                    }
+                    var exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('Detalhes de um estado :biohazard:')
+                    //.setURL('https://discord.js.org/')
+                    //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                    .setDescription('Informações mais detalhadas sobre um único estado')
+                    //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                    //.setImage('https://i.imgur.com/wSTFkRM.png')
+                    .setTimestamp()
+                    .setFooter('Em progresso by Kiyomin')
+                    exampleEmbed.addFields(
+                        { name: 'Estado', value: json.name, inline: true },
+                        { name: 'UF', value: json.uf, inline: true},
+                        { name: 'Casos :fire:', value: casos.cases, inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: casos.deaths, inline: true },
+                        { name: 'Letalidade :coffin: ', value: ((casos.deaths/casos.cases)*100).toFixed(2) + '%' , inline: true }
+                    )
+                    msg.channel.send(exampleEmbed);
+                } catch (error) {
+                    var exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('Erro! :biohazard:')
+                    //.setURL('https://discord.js.org/')
+                    //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                    .setDescription(error + " :penguin:")
+                    //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                    //.setImage('https://i.imgur.com/wSTFkRM.png')
+                    .setTimestamp()
+                    .setFooter('Em progresso by Kiyomin')
+                    msg.channel.send(exampleEmbed);
                 }
-                exampleEmbed.addFields(
-                    { name: 'Estado :flag_br:', value: casos[i].state, inline: true },
-                    { name: 'Casos :fire:', value: casos[i].cases, inline: true },
-                    { name: 'Óbitos :skull_crossbones:', value: casos[i].deaths, inline: true },
-                )
-            }
-            msg.channel.send(exampleEmbed);
-            } catch (error) {
-            console.log(error);
-            }
-        };
-        getData(url);
+            };
+            getData(url);
+        }
+        else{
+            const url = 'https://api.coronavairus.com.br/state/last';
+            const getData = async url => {
+                try {
+                const response = await fetch(url);
+                let json = await response.json();
+                json.sort(function(a, b){
+                    return b.latest.cases - a.latest.cases;
+                });
+                var exampleEmbed = new Discord.MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle('Ranking por estados do brasil :biohazard:')
+                //.setURL('https://discord.js.org/')
+                //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+                .setDescription('8 estados mais afligidos pelo coroninha')
+                //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+                //.setImage('https://i.imgur.com/wSTFkRM.png')
+                .setTimestamp()
+                .setFooter('Em progresso by Kiyomin')
+                for(var i in json){
+                    if( i == 8){
+                        break;
+                    }
+                    exampleEmbed.addFields(
+                        { name: 'Estado :flag_br:', value: json[i].name, inline: true },
+                        { name: 'Casos :fire:', value: json[i].latest.cases, inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json[i].latest.deaths, inline: true },
+                    )
+                }
+                msg.channel.send(exampleEmbed);
+                } catch (error) {
+                    console.log(error);
+                }
+            };
+            getData(url);
+        }
     }
     if(command === '!kokoron'){
         async function fetchJSON(url) {
