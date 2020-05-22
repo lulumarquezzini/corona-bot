@@ -13,6 +13,45 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if( command === '!diarios') {
+        const filtro = args[0] === '-o' ? 'todayDeaths' : 'todayCases';
+        const url = 'https://disease.sh/v2/countries?sort=' + filtro;
+        const getData = async url => {
+            try {
+            const response = await fetch(url);
+            let json = await response.json();
+            var exampleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle(filtro === 'todayDeaths' ? 'Mortes do dia :biohazard:' : 'Casos do dia :biohazard:')
+            .setDescription(filtro === 'todayDeaths'? '8 países que mais mortes tiveram apenas hoje' : '8 países que mais casos tiveram apenas hoje!')
+            .setTimestamp()
+            .setFooter('Em progresso by Kiyomin')
+            for(var i in json){
+                if( i == 8){
+                    break;
+                }
+                let flag = ':flag_' + json[i].countryInfo.iso2.toLowerCase() + ':';
+
+                filtro === 'todayDeaths' ?
+                exampleEmbed.addFields(
+                    { name: 'País', value: json[i].country + " " + flag, inline: true },
+                    { name: 'Óbitos :skull_crossbones:', value: '+' + json[i].todayDeaths, inline: true },
+                    { name: 'Casos :fire:', value: '+' + json[i].todayCases,  inline: true },
+                )
+                :
+                exampleEmbed.addFields(
+                    { name: 'País', value: json[i].country + " " + flag, inline: true },
+                    { name: 'Casos :fire:', value: '+' + json[i].todayCases,  inline: true },
+                    { name: 'Óbitos :skull_crossbones:', value: '+' + json[i].todayDeaths, inline: true },
+                )
+            }
+            msg.channel.send(exampleEmbed);
+            } catch (error) {
+            console.log(error);
+            }
+        };
+        getData(url);
+    }
     if(command === '!ajuda'){
         var exampleEmbed = new Discord.MessageEmbed()
         .setColor('#0099ff')
@@ -31,7 +70,8 @@ client.on('message', msg => {
             { name: '!obitos', value: 'Mostra os oito primeiros em óbitos, coroninha não é fácil não.'},
             { name:  '!hug', value: 'Tente abraçar alguém e veja o resultado!'},
             { name: '!kokoron', value: 'Afinal, quem não precisa de Kokorons nesses tempos difíceis? (Ou em qualquer tempo) :sunny:'},
-            { name: '!cloroquina', value: 'Você é um robô do Bolsonaro :robot:'}
+            { name: '!cloroquina', value: 'Você é um robô do Bolsonaro :robot:'},
+            { name: '!diarios (-o)', value: 'Mostra os países que estão liderando nos casos do dia, com -o, mostra a liderança nos óbitos'}
         )
         msg.channel.send(exampleEmbed);        
     }
@@ -238,38 +278,7 @@ client.on('message', msg => {
                 if( i == 8){
                     break;
                 }
-                let flag;
-                switch (json[i].country) {
-                    case 'USA':
-                    flag = ':flag_us:'
-                    break;
-                    case 'Russia':
-                        flag = ':flag_ru:'
-                        break;
-                    case 'Brazil':
-                        flag = ':flag_br:'
-                        break;
-                    case 'UK':
-                        flag = ':flag_gb:'
-                        break;
-                    case 'Spain':
-                        flag = ':flag_es:'
-                        break;
-                    case 'Italy':
-                        flag = ':flag_it:'
-                        break;
-                    case 'France':
-                        flag = ':flag_fr:'
-                        break;
-                    case 'Germany':
-                        flag = ':flag_de:'
-                        break;
-                    case 'Belgium':
-                        flag = ':flag_be:'
-                        break;
-                    default:
-                    flag = ':map:'
-                }
+                let flag = ':flag_' + json[i].countryInfo.iso2.toLowerCase() + ':';
                 exampleEmbed.addFields(
                     { name: 'País', value: json[i].country + " " + flag, inline: true },
                     { name: 'Óbitos :skull_crossbones:', value: json[i].deaths + ' ( +' + json[i].todayDeaths + ' )', inline: true },
@@ -303,38 +312,7 @@ client.on('message', msg => {
                     //.setImage('https://i.imgur.com/wSTFkRM.png')
                     .setTimestamp()
                     .setFooter('Em progresso by Kiyomin')
-                    let flag;
-                    switch (json.country) {
-                        case 'USA':
-                        flag = ':flag_us:'
-                        break;
-                        case 'Russia':
-                            flag = ':flag_ru:'
-                            break;
-                        case 'Brazil':
-                            flag = ':flag_br:'
-                            break;
-                        case 'UK':
-                            flag = ':flag_gb:'
-                            break;
-                        case 'Spain':
-                            flag = ':flag_es:'
-                            break;
-                        case 'Italy':
-                            flag = ':flag_it:'
-                            break;
-                        case 'France':
-                            flag = ':flag_fr:'
-                            break;
-                        case 'Germany':
-                            flag = ':flag_de:'
-                            break;
-                        case 'Belgium':
-                            flag = ':flag_be:'
-                            break;
-                        default:
-                        flag = ':map:'
-                    }
+                    let flag = ':flag_' + json.countryInfo.iso2.toLowerCase() + ':';
                     exampleEmbed.addFields(
                         { name: 'País', value: json.country + " " + flag, inline: true },
                         { name: 'Casos :fire:', value: json.cases + " ( +" + json.todayCases + " )", inline: true },
@@ -383,38 +361,7 @@ client.on('message', msg => {
                     if( i == 8){
                         break;
                     }
-                    let flag;
-                    switch (json[i].country) {
-                        case 'USA':
-                        flag = ':flag_us:'
-                        break;
-                        case 'Russia':
-                            flag = ':flag_ru:'
-                            break;
-                        case 'Brazil':
-                            flag = ':flag_br:'
-                            break;
-                        case 'UK':
-                            flag = ':flag_gb:'
-                            break;
-                        case 'Spain':
-                            flag = ':flag_es:'
-                            break;
-                        case 'Italy':
-                            flag = ':flag_it:'
-                            break;
-                        case 'France':
-                            flag = ':flag_fr:'
-                            break;
-                        case 'Germany':
-                            flag = ':flag_de:'
-                            break;
-                        case 'Belgium':
-                            flag = ':flag_be:'
-                            break;
-                        default:
-                        flag = ':map:'
-                    }
+                    let flag = ':flag_' + json[i].countryInfo.iso2.toLowerCase() + ':';
                     exampleEmbed.addFields(
                         { name: 'País', value: json[i].country + " " + flag, inline: true },
                         { name: 'Casos :fire:', value: json[i].cases + ' ( +' + json[i].todayCases + ' )', inline: true },
