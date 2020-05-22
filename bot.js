@@ -219,15 +219,11 @@ client.on('message', msg => {
         '\n Em nome de Jesus.... :musical_note:');
     }
     if(command === '!obitos'){
-        const url = 'https://covid19-brazil-api.now.sh/api/report/v1/countries';
+        const url = 'https://disease.sh/v2/countries?sort=deaths';
         const getData = async url => {
             try {
             const response = await fetch(url);
             let json = await response.json();
-            let casos = json.data;
-            casos.sort(function(a, b){
-                return b.deaths - a.deaths;
-            });
             var exampleEmbed = new Discord.MessageEmbed()
             .setColor('#0099ff')
             .setTitle('Ranking de mortes mundial :biohazard:')
@@ -238,13 +234,13 @@ client.on('message', msg => {
             //.setImage('https://i.imgur.com/wSTFkRM.png')
             .setTimestamp()
             .setFooter('Em progresso by Kiyomin')
-            for(var i in casos){
+            for(var i in json){
                 if( i == 8){
                     break;
                 }
                 let flag;
-                switch (casos[i].country) {
-                    case 'US':
+                switch (json[i].country) {
+                    case 'USA':
                     flag = ':flag_us:'
                     break;
                     case 'Russia':
@@ -253,7 +249,7 @@ client.on('message', msg => {
                     case 'Brazil':
                         flag = ':flag_br:'
                         break;
-                    case 'United Kingdom':
+                    case 'UK':
                         flag = ':flag_gb:'
                         break;
                     case 'Spain':
@@ -268,13 +264,16 @@ client.on('message', msg => {
                     case 'Germany':
                         flag = ':flag_de:'
                         break;
+                    case 'Belgium':
+                        flag = ':flag_be:'
+                        break;
                     default:
                     flag = ':map:'
                 }
                 exampleEmbed.addFields(
-                    { name: 'País', value: casos[i].country + " " + flag, inline: true },
-                    { name: 'Óbitos :skull_crossbones:', value: casos[i].deaths, inline: true },
-                    { name: 'Casos :fire:', value: casos[i].confirmed, inline: true },
+                    { name: 'País', value: json[i].country + " " + flag, inline: true },
+                    { name: 'Óbitos :skull_crossbones:', value: json[i].deaths + ' ( +' + json[i].todayDeaths + ' )', inline: true },
+                    { name: 'Casos :fire:', value: json[i].cases + ' ( +' + json[i].todayCases + ' )',  inline: true },
                 )
             }
             msg.channel.send(exampleEmbed);
@@ -286,13 +285,12 @@ client.on('message', msg => {
     }
     if (command === '!casos') {
         if(args.length > 0){
-            const url = 'https://covid19-brazil-api.now.sh/api/report/v1/' + args[0];
+            const url = 'https://disease.sh/v2/countries/' + args[0];
             const getData = async url => {
                 try {
                     const response = await fetch(url);
                     let json = await response.json();
-                    let casos = json.data;
-                    if (Object.keys(casos).length === 0){
+                    if (Object.keys(json).length === 0){
                         throw "País não encontrado, bobão!"
                     }
                     var exampleEmbed = new Discord.MessageEmbed()
@@ -306,8 +304,8 @@ client.on('message', msg => {
                     .setTimestamp()
                     .setFooter('Em progresso by Kiyomin')
                     let flag;
-                    switch (casos.country) {
-                        case 'US':
+                    switch (json.country) {
+                        case 'USA':
                         flag = ':flag_us:'
                         break;
                         case 'Russia':
@@ -316,7 +314,7 @@ client.on('message', msg => {
                         case 'Brazil':
                             flag = ':flag_br:'
                             break;
-                        case 'United Kingdom':
+                        case 'UK':
                             flag = ':flag_gb:'
                             break;
                         case 'Spain':
@@ -331,15 +329,22 @@ client.on('message', msg => {
                         case 'Germany':
                             flag = ':flag_de:'
                             break;
+                        case 'Belgium':
+                            flag = ':flag_be:'
+                            break;
                         default:
                         flag = ':map:'
                     }
                     exampleEmbed.addFields(
-                        { name: 'País', value: casos.country + " " + flag, inline: true },
-                        { name: 'Casos :fire:', value: casos.confirmed, inline: true },
-                        { name: 'Óbitos :skull_crossbones:', value: casos.deaths, inline: true },
-                        { name: 'Ativos :hospital: ', value: casos.cases , inline: true },
-                        { name: 'Recuperados :penguin:', value: casos.recovered, inline: true },
+                        { name: 'País', value: json.country + " " + flag, inline: true },
+                        { name: 'Casos :fire:', value: json.cases + " ( +" + json.todayCases + " )", inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json.deaths + " ( +" + json.todayDeaths + " )", inline: true },
+                        { name: 'Ativos :hospital: ', value: json.active , inline: true },
+                        { name: 'Estado crítico :crying_cat_face', value: json.critical, inline: true},
+                        { name: 'Recuperados :penguin:', value: json.recovered, inline: true },
+                        { name: 'Casos por milhão', value: json.casesPerOneMillion, inline: true},
+                        { name: 'Mortes por milhão', value: json.deathsPerOneMillion, inline: true},
+                        { name: 'Testes :test_tube:', value: json.tests, inline: true}
                     )
                     msg.channel.send(exampleEmbed);
                 } catch (error) {
@@ -359,15 +364,11 @@ client.on('message', msg => {
             getData(url);
         }
         else {
-            const url = 'https://covid19-brazil-api.now.sh/api/report/v1/countries';
+            const url = 'https://disease.sh/v2/countries?sort=cases';
             const getData = async url => {
                 try {
                 const response = await fetch(url);
                 let json = await response.json();
-                let casos = json.data;
-                casos.sort(function(a, b){
-                    return b.confirmed - a.confirmed;
-                });
                 var exampleEmbed = new Discord.MessageEmbed()
                 .setColor('#0099ff')
                 .setTitle('Ranking de casos mundial :biohazard:')
@@ -378,13 +379,13 @@ client.on('message', msg => {
                 //.setImage('https://i.imgur.com/wSTFkRM.png')
                 .setTimestamp()
                 .setFooter('Em progresso by Kiyomin')
-                for(var i in casos){
+                for(var i in json){
                     if( i == 8){
                         break;
                     }
                     let flag;
-                    switch (casos[i].country) {
-                        case 'US':
+                    switch (json[i].country) {
+                        case 'USA':
                         flag = ':flag_us:'
                         break;
                         case 'Russia':
@@ -393,7 +394,7 @@ client.on('message', msg => {
                         case 'Brazil':
                             flag = ':flag_br:'
                             break;
-                        case 'United Kingdom':
+                        case 'UK':
                             flag = ':flag_gb:'
                             break;
                         case 'Spain':
@@ -408,13 +409,16 @@ client.on('message', msg => {
                         case 'Germany':
                             flag = ':flag_de:'
                             break;
+                        case 'Belgium':
+                            flag = ':flag_be:'
+                            break;
                         default:
                         flag = ':map:'
                     }
                     exampleEmbed.addFields(
-                        { name: 'País', value: casos[i].country + " " + flag, inline: true },
-                        { name: 'Casos :fire:', value: casos[i].confirmed, inline: true },
-                        { name: 'Óbitos :skull_crossbones:', value: casos[i].deaths, inline: true },
+                        { name: 'País', value: json[i].country + " " + flag, inline: true },
+                        { name: 'Casos :fire:', value: json[i].cases + ' ( +' + json[i].todayCases + ' )', inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json[i].deaths + ' ( +' + json[i].todayDeaths + ' )', inline: true },
                     )
                 }
                 msg.channel.send(exampleEmbed);
