@@ -299,7 +299,7 @@ client.on('message', msg => {
                 try {
                     const response = await fetch(url);
                     let json = await response.json();
-                    if (Object.keys(json).length === 0){
+                    if (json.message){
                         throw "País não encontrado, bobão!"
                     }
                     var exampleEmbed = new Discord.MessageEmbed()
