@@ -4,6 +4,7 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const fetch = require('node-fetch');
+const moment = require('moment');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -12,6 +13,37 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if(command === '!mundo'){
+        const url = 'https://disease.sh/v2/all';
+        const getData = async url => {
+            try {
+            const response = await fetch(url);
+            let json = await response.json();
+            var exampleEmbed = new Discord.MessageEmbed()
+            .setColor('#0099ff')
+            .setTitle('Dados totais Covid-19! :biohazard:')
+            //.setURL('https://discord.js.org/')
+            //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+            .setDescription('Panorama geral do mundo! :map:')
+            //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+            //.setImage('https://i.imgur.com/wSTFkRM.png')
+            .setTimestamp()
+            .setFooter('Em progresso by Kiyomin')
+            exampleEmbed.addFields(
+                { name: 'Países afetados', value: json.affectedCountries, inline: true},
+                { name: 'Casos :fire:', value: json.cases +' (+'+json.todayCases+' )', inline: true },
+                { name: 'Óbitos :skull_crossbones:', value: json.deaths + ' ( +' + json.todayDeaths+ ' )', inline: true },
+                { name: 'Ativos :hospital: ', value: json.active, inline: true},
+                { name: 'Estado crítico :crying_cat_face:', value: json.critical, inline: true},
+                { name: 'Recuperados :penguin:', value: json.recovered, inline: true}
+            )
+            msg.channel.send(exampleEmbed);
+            } catch (error) {
+            console.log(error);
+            }
+        };
+        getData(url);        
+    }
     if(command === '!estados'){
         const url = 'https://covid19-brazil-api.now.sh/api/report/v1';
         const getData = async url => {
