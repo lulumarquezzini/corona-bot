@@ -13,6 +13,28 @@ client.on('ready', () => {
 client.on('message', msg => {
     const args = msg.content.split(' ');
     const command = args.shift().toLowerCase();
+    if(command === '!ajuda'){
+        var exampleEmbed = new Discord.MessageEmbed()
+        .setColor('#0099ff')
+        .setTitle('Ajuda botzinho! :biohazard:')
+        //.setURL('https://discord.js.org/')
+        //.setAuthor('Some name', 'https://i.imgur.com/wSTFkRM.png', 'https://discord.js.org')
+        .setDescription('Lista de comandos para você não se perder!')
+        //.setThumbnail('https://i.imgur.com/wSTFkRM.png')
+        //.setImage('https://i.imgur.com/wSTFkRM.png')
+        .setTimestamp()
+        .setFooter('Em progresso by Kiyomin')
+        exampleEmbed.addFields(
+            { name: '!mundo', value: 'Lista a situação atualizada do mundo. Atualizado de 10 em 10 min.'},
+            { name: '!estados :UF', value: 'Se você não especificar nenhum estado, lista todos. Caso especifique, mostra detalhes de um só!'},
+            { name: '!casos :country', value: 'Lista em ordem os mais atingidos do mundo, caso selecione um país, mostra detalhes deste.'},
+            { name: '!obitos', value: 'Mostra os oito primeiros em óbitos, coroninha não é fácil não.'},
+            { name:  '!hug', value: 'Tente abraçar alguém e veja o resultado!'},
+            { name: '!kokoron', value: 'Afinal, quem não precisa de Kokorons nesses tempos difíceis? (Ou em qualquer tempo) :sunny:'},
+            { name: '!cloroquina', value: 'Você é um robô do Bolsonaro :robot:'}
+        )
+        msg.channel.send(exampleEmbed);        
+    }
     if(command === '!mundo'){
         const url = 'https://disease.sh/v2/all';
         const getData = async url => {
