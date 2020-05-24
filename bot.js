@@ -197,7 +197,6 @@ client.on('message', msg => {
                 try {
                     const response = await fetch(url);
                     let json = await response.json();
-                    let casos = json.latest;
                     if (Object.keys(json).length === 0){
                         throw "Estado não encontrado, bobão!"
                     }
@@ -214,9 +213,9 @@ client.on('message', msg => {
                     exampleEmbed.addFields(
                         { name: 'Estado', value: json.name, inline: true },
                         { name: 'UF', value: json.uf, inline: true},
-                        { name: 'Casos :fire:', value: casos.cases, inline: true },
-                        { name: 'Óbitos :skull_crossbones:', value: casos.deaths, inline: true },
-                        { name: 'Letalidade :coffin: ', value: ((casos.deaths/casos.cases)*100).toFixed(2) + '%' , inline: true }
+                        { name: 'Casos :fire:', value: json.cases + ' ( +' + json.newCases + ' )', inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json.deaths + ' ( +' + json.newDeaths + ' )', inline: true },
+                        { name: 'Letalidade :coffin: ', value: json.mortalityRate.toFixed(2) + '%' , inline: true }
                     )
                     msg.channel.send(exampleEmbed);
                 } catch (error) {
@@ -242,7 +241,7 @@ client.on('message', msg => {
                 const response = await fetch(url);
                 let json = await response.json();
                 json.sort(function(a, b){
-                    return b.latest.cases - a.latest.cases;
+                    return b.cases - a.cases;
                 });
                 var exampleEmbed = new Discord.MessageEmbed()
                 .setColor('#0099ff')
@@ -260,8 +259,8 @@ client.on('message', msg => {
                     }
                     exampleEmbed.addFields(
                         { name: 'Estado :flag_br:', value: json[i].name, inline: true },
-                        { name: 'Casos :fire:', value: json[i].latest.cases, inline: true },
-                        { name: 'Óbitos :skull_crossbones:', value: json[i].latest.deaths, inline: true },
+                        { name: 'Casos :fire:', value: json[i].cases + ' ( +' + json[i].newCases + ' )', inline: true },
+                        { name: 'Óbitos :skull_crossbones:', value: json[i].deaths + ' ( +' + json[i].newDeaths + ' )', inline: true },
                     )
                 }
                 msg.channel.send(exampleEmbed);
